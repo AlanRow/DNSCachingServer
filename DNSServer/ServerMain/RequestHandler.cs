@@ -16,9 +16,9 @@ namespace DNSServer
         private Connect connect;
         private UserInterface mainUI;
 
-        public RequestHandler(Connect userConnect, UserInterface ui)
+        public RequestHandler(Connect userConnect, UserInterface ui, CashResolver cashResolver)
         {
-            resolver = new CashResolver();
+            resolver = cashResolver;
             connect = userConnect;//user socket
             mainUI = ui;
             requestPack = connect.Packet;

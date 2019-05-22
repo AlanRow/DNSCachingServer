@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
@@ -32,9 +33,30 @@ namespace DNSServer
 
         private Record[] ResolveQuestion(Question quest)
         {
+
             var records = new Record[0];
 
-            master.SendRequest(quest);
+            try
+            {
+                master.SendRequest(quest);
+            } catch (SocketException ex)
+            {
+                var recordsOutdated = false;
+
+                if(cash.TryGetValue(quest, out records))
+                    foreach (var record in records)
+                    {
+                        if (record.IsOutdated())
+                            recordsOutdated = true;
+                    }
+                else
+                {
+                    throw new RequestTimeOutException(quest.Domain + " isn't connection to network!");
+                }
+
+                if (!recordsOutdated)
+                    return records;
+            }
 
             for (var i = 0; i < 10; i++)
             {
@@ -43,6 +65,7 @@ namespace DNSServer
                     var recordsOutdated = false;
                     if (cash.TryGetValue(quest, out records))
                     {
+
                         foreach (var record in records)
                         {
                             if (record.IsOutdated())

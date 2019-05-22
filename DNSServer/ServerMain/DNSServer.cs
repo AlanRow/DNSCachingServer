@@ -12,10 +12,12 @@ namespace DNSServer
     class DNSServer
     {
         private UserInterface ui;
+        private CashResolver resolver;
 
         public DNSServer(IPAddress serverInterface)
         {
             ui = new UserInterface(serverInterface);
+            resolver = new CashResolver();
         }
 
         public void Listen()
@@ -25,7 +27,7 @@ namespace DNSServer
                 //при получении пакета создание нового потока и активация в нем RequestHandler'a
                 var connect = ui.GetNewConnect();
 
-                var handler = new RequestHandler(connect, ui);
+                var handler = new RequestHandler(connect, ui, resolver);
                 var handling = new Thread(handler.Resolve);
                 handling.Start();
             }

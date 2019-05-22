@@ -49,6 +49,7 @@
     <Compile Include="Abstractions\SOAData.cs" />
     <Compile Include="Abstractions\SuffixTree.cs" />
     <Compile Include="Exceptions\RequestTimeOutException.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="NotImportant\ColdCash.cs" />
     <Compile Include="NotImportant\CashResolvercs.cs" />
     <Compile Include="Program.cs" />
