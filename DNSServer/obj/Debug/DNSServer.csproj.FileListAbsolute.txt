@@ -1,0 +1,10 @@
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\bin\Debug\DNSServer.exe.config
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\bin\Debug\DNSServer.exe
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\bin\Debug\DNSServer.pdb
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\obj\Debug\DNSServer.csprojResolveAssemblyReference.cache
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\obj\Debug\DNSServer.csproj.CoreCompileInputs.cache
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\obj\Debug\DNSServer.exe
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\obj\Debug\DNSServer.pdb
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\bin\Debug\nunit.util.dll
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\bin\Debug\nunit.core.interfaces.dll
+C:\Users\Алексей\source\repos\DNSServer\DNSServer\bin\Debug\nunit.core.dll

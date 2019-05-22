@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A846BE62-9D4F-45BD-8BF1-945D63803804}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DNSServer</RootNamespace>
+    <AssemblyName>DNSServer</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.util">
+      <HintPath>..\..\..\..\Documents\программы\NUnitTestAdapter-2.1.1\bin\nunit.util.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Abstractions\MXData.cs" />
+    <Compile Include="Abstractions\SOAData.cs" />
+    <Compile Include="Exceptions\RequestTimeOutException.cs" />
+    <Compile Include="NotImportant\ColdCash.cs" />
+    <Compile Include="NotImportant\CashResolvercs.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NotImportant\ClientReceiver.cs" />
+    <Compile Include="NotImportant\DNSRequester.cs" />
+    <Compile Include="NotImportant\Resolver.cs" />
+    <Compile Include="Resolver\ServerInterface.cs" />
+    <Compile Include="Resolver\UIDGenerator.cs" />
+    <Compile Include="Resolver\CashResolver.cs" />
+    <Compile Include="Abstractions\Connect.cs" />
+    <Compile Include="Resolver\DelegateResolver.cs" />
+    <Compile Include="ServerMain\DNSParser.cs" />
+    <Compile Include="ServerMain\DNSServer.cs" />
+    <Compile Include="Exceptions\MailformRequestException.cs" />
+    <Compile Include="Abstractions\Question.cs" />
+    <Compile Include="Abstractions\Record.cs" />
+    <Compile Include="NotImportant\Reply.cs" />
+    <Compile Include="Abstractions\Request.cs" />
+    <Compile Include="ServerMain\RequestHandler.cs" />
+    <Compile Include="NotImportant\ResourceEntry.cs" />
+    <Compile Include="NotImportant\Server.cs" />
+    <Compile Include="ServerMain\UserInterface.cs" />
+    <Compile Include="NotImportant\Tester.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
