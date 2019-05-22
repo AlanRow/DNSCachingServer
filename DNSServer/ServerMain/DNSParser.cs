@@ -62,110 +62,6 @@ namespace DNSServer
             
 
         }
-        
-        public static byte[] GenerateResponse(Record[] records, Request req)
-        {
-            var response = new List<byte>();
-
-            response.AddRange(GenerateRequest(req.Questions[0], (short)req.ID));
-            response[6] = (byte)(records.Length / 256);
-            response[7] = (byte)(records.Length % 256);
-
-            foreach (var record in records)
-            {
-                response.AddRange(GenerateAnswer(record));
-            }
-
-            return response.ToArray();
-        }
-
-        private static byte[] GenerateAnswer(Record rec)
-        {
-            var answer = new List<byte>();
-
-            answer.AddRange(GenerateName(rec.Name));
-            answer.AddRange(To2Bytes((int)rec.Type));
-            answer.AddRange(To2Bytes(1));
-
-            var ttl = rec.ActualTo.Subtract(DateTime.Now).Seconds;
-            answer.AddRange(To2Bytes(ttl / 65536));
-            answer.AddRange(To2Bytes(ttl % 65536));
-
-            switch (rec.Type)
-            {
-                case RecordType.A:
-                    var address4 = (byte[])rec.Data;
-                    answer.AddRange(address4);
-                    break;
-                case RecordType.AAA:
-                    var address16 = (byte[])rec.Data;
-                    answer.AddRange(address16);
-                    break;
-                case RecordType.NS:
-                    var nsname = (string)rec.Data;
-                    answer.AddRange(GenerateName(nsname));
-                    break;
-                case RecordType.SOA:
-                    var soaData = (SOAData)rec.Data;
-                    answer.AddRange(GenerateName(soaData.Server));
-                    answer.AddRange(GenerateName(soaData.Mail));
-                    answer.AddRange(To2Bytes((int)(soaData.Serial / 65536)));
-                    answer.AddRange(To2Bytes((int)(soaData.Serial % 65536)));
-                    answer.AddRange(To2Bytes(soaData.Refresh));
-                    answer.AddRange(To2Bytes(soaData.Retry));
-                    answer.AddRange(To2Bytes(soaData.Expire));
-                    answer.AddRange(To2Bytes(soaData.MinTTL));
-                    break;
-
-            }
-
-            return answer.ToArray();
-        }
-
-        public static byte[] GenerateRequest(Question quest, short id)
-        {
-            var request = new List<byte>();
-
-            request.AddRange(To2Bytes(id));
-            request.Add(1);//0... - request, .0000... - opcode (std. query), ...0.. - isn't truncated, ...0. - in't fragmented, ...1 - recursion
-            request.Add(0);//0... - server supports recursion, .000... - reserved, ...0000 - RCODE (NOError)
-            request.AddRange(To2Bytes(1));//questions count
-            request.AddRange(To2Bytes(0));//answers count
-            request.AddRange(To2Bytes(0));//authoritive RRs count
-            request.AddRange(To2Bytes(0));//additional RRs count
-
-            //simple single question
-            request.AddRange(EncodeDName(quest.Domain));//name
-            request.AddRange(To2Bytes((int)quest.Type));//Type
-            request.AddRange(To2Bytes(1));//Class (IN)
-
-            return request.ToArray();
-        }
-
-        private static List<byte> EncodeDName(string name)
-        {
-            var zones = name.Split('.');
-            var encName = new List<byte>();
-
-            foreach (var z in zones)
-            {
-                if (z == "")
-                    continue;
-
-                var encZone = Encoding.UTF8.GetBytes(z);
-                encName.Add((byte)encZone.Length);
-                encName.AddRange(encZone);
-            }
-
-            encName.Add(0);
-
-            return encName;
-        }
-
-        private static byte[] To2Bytes(int num)
-        {
-            return new byte[] { (byte)(num / 256), (byte)(num % 256) };
-        }
 
         private static int ParseQuestion(Question[] questions, int current, byte[] packet, int startIndex)
         {
@@ -177,7 +73,7 @@ namespace DNSServer
             int typeNum = packet[i] * 256 + packet[i + 2];
             RecordType type = RecordType.None;
             
-            if (!DNSParser.TryGenerateRecordType(ref type, typeNum))
+            if (!DNSGenerator.TryGenerateRecordType(ref type, typeNum))
                 throw new MailformRequestException("Type with number " + typeNum + " has not found!");
 
             var quest = new Question(domain, type);
@@ -194,7 +90,7 @@ namespace DNSServer
             i = ParseName(ref name, packet, i);
 
             var type = RecordType.None;
-            if (!TryGenerateRecordType(ref type, packet[i++] * 256 + packet[i++]))
+            if (!DNSGenerator.TryGenerateRecordType(ref type, packet[i++] * 256 + packet[i++]))
                 throw new MailformRequestException();
 
             i += 2;
@@ -207,26 +103,6 @@ namespace DNSServer
             records[current] = new Record(name, type, ttl, data);
 
             return i;
-        }
-
-        private static byte[] GenerateName(string name)
-        {
-            var zones = name.Split('.');
-            var bytes = new List<byte>();
-            
-            foreach (var z in zones)
-            {
-                if (z == "")
-                    continue;
-
-                var code = Encoding.UTF8.GetBytes(z);
-                bytes.Add((byte)code.Length);
-                bytes.AddRange(code);
-            }
-
-            bytes.Add(0);
-
-            return bytes.ToArray();
         }
 
         private static int ParseName(ref string name, byte[] pack, int start)
@@ -297,34 +173,6 @@ namespace DNSServer
             name += zone + ".";
 
             return i + length + 1;
-        }
-
-        public static bool TryGenerateRecordType(ref RecordType type, int number)
-        {
-            switch (number)
-            {
-                case 0:
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 5:
-                    break;
-                case 6:
-                    break;
-                case 12:
-                    break;
-                case 15:
-                    break;
-                case 28:
-                    break;
-                default:
-                    return false;
-            }
-
-            type = (RecordType)number;
-            return true;
         }
     }
 }

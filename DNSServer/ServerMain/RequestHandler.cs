@@ -28,7 +28,7 @@ namespace DNSServer
         {
             var request = DNSParser.ParseRequest(requestPack);//DONE
             var answer = resolver.ResolveNames(request);//DONE
-            var answerPack = DNSParser.GenerateResponse(answer, request);//DONE
+            var answerPack = DNSGenerator.GenerateResponse(answer, request);//DONE
             mainUI.SendAnswer(connect, answerPack);
         }
     }

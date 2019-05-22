@@ -11,10 +11,10 @@ namespace DNSTest
         public void RecordTypeParseTest()
         {
             var type = RecordType.None;
-            DNSParser.TryGenerateRecordType(ref type, 28);
+            DNSGenerator.TryGenerateRecordType(ref type, 28);
 
             Assert.AreEqual(RecordType.AAA, type);
-            Assert.IsFalse(DNSParser.TryGenerateRecordType(ref type, 56));
+            Assert.IsFalse(DNSGenerator.TryGenerateRecordType(ref type, 56));
 
         }
 
@@ -31,7 +31,7 @@ namespace DNSTest
 
 
 
-        private static byte[] ParsePacket(string pack)
+        public static byte[] ParsePacket(string pack)
         {
 
             if (pack.Length % 2 != 0)
@@ -52,7 +52,7 @@ namespace DNSTest
             return bytes;
         }
 
-        private static byte HexParse(char hex)
+        public static byte HexParse(char hex)
         {
             if (Char.IsDigit(hex))
                 return byte.Parse("" + hex);

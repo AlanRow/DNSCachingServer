@@ -41,7 +41,7 @@ namespace DNSServer
         public void SendRequest(Question quest)
         {
             var id = uidg.Generate();
-            var pack = DNSParser.GenerateRequest(quest, id);
+            var pack = DNSGenerator.GenerateRequest(quest, id, new SuffixTree());
 
             client.Send(pack, pack.Length);
         }

@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Abstractions\MXData.cs" />
     <Compile Include="Abstractions\SOAData.cs" />
+    <Compile Include="Abstractions\SuffixTree.cs" />
     <Compile Include="Exceptions\RequestTimeOutException.cs" />
     <Compile Include="NotImportant\ColdCash.cs" />
     <Compile Include="NotImportant\CashResolvercs.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Resolver\CashResolver.cs" />
     <Compile Include="Abstractions\Connect.cs" />
     <Compile Include="Resolver\DelegateResolver.cs" />
+    <Compile Include="ServerMain\DNSGenerator.cs" />
     <Compile Include="ServerMain\DNSParser.cs" />
     <Compile Include="ServerMain\DNSServer.cs" />
     <Compile Include="Exceptions\MailformRequestException.cs" />
