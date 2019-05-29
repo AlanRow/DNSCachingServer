@@ -73,6 +73,7 @@
     <Compile Include="ServerMain\RequestHandler.cs" />
     <Compile Include="NotImportant\ResourceEntry.cs" />
     <Compile Include="NotImportant\Server.cs" />
+    <Compile Include="Resolver\SimpleDelegateResolver.cs" />
     <Compile Include="ServerMain\UserInterface.cs" />
     <Compile Include="NotImportant\Tester.cs" />
   </ItemGroup>

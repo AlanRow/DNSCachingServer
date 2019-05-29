@@ -10,12 +10,14 @@ namespace DNSServer
     class CashResolver
     {
         private Dictionary<Question, Record[]> cash;
+        private Dictionary<int, Queue<byte[]>> backupCash;
         private DelegateResolver master;
 
         public CashResolver()
         {
             cash = new Dictionary<Question, Record[]>();
-            master = new DelegateResolver(cash);
+            backupCash = new Dictionary<int, Queue<byte[]>>();
+            master = new DelegateResolver(cash, backupCash);
             new Thread(master.ListenAndUpdate).Start();
         }
         
@@ -25,7 +27,13 @@ namespace DNSServer
 
             foreach (var quest in req.Questions)
             {
-                records.AddRange(ResolveQuestion(quest));
+                try
+                {
+                    records.AddRange(ResolveQuestion(quest));
+                } catch (RequestTimeOutException ex)
+                {
+                    throw new TimeoutException();
+                }
             }
 
             return records.ToArray();
@@ -33,7 +41,6 @@ namespace DNSServer
 
         private Record[] ResolveQuestion(Question quest)
         {
-
             var records = new Record[0];
 
             try
@@ -58,7 +65,7 @@ namespace DNSServer
                     return records;
             }
 
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 2; i++)
             {
                 lock (cash)
                 {
@@ -76,8 +83,10 @@ namespace DNSServer
                             return records;
                     }
                 }
-                Thread.Sleep(500);
+                Thread.Sleep(50);
             }
+
+
             
             throw new RequestTimeOutException(quest.Domain + " isn't resolvable now.");
         }

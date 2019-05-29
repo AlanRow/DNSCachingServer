@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,8 +60,6 @@ namespace DNSServer
         {
             if (packet.Length < 12)
                 throw new MailformRequestException("DNS-Packet too short (< 12 bytes)");
-            
-
         }
 
         private static int ParseQuestion(Question[] questions, int current, byte[] packet, int startIndex)

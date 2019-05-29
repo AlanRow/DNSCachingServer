@@ -14,12 +14,14 @@ namespace DNSServer
         private UdpClient client;
         private UIDGenerator uidg;
         Dictionary<Question, Record[]> cash;
+        Dictionary<int, Queue<byte[]>> backup;
 
-        public DelegateResolver(Dictionary<Question, Record[]> extCash)
+        public DelegateResolver(Dictionary<Question, Record[]> extCash, Dictionary<int, Queue<byte[]>> backupCash)
         {
             client = new UdpClient(master, 53);
             uidg = new UIDGenerator();
             cash = extCash;
+            backup = backupCash;
         }
 
         public void ListenAndUpdate()
@@ -28,12 +30,24 @@ namespace DNSServer
             {
                 var remote = new IPEndPoint(IPAddress.Parse(master), 53);
                 var pack = client.Receive(ref remote);
-                
-                var record = DNSParser.ParseResponse(pack);
-                
-                lock (cash)
+
+                try
                 {
-                    cash[record.Item1] = record.Item2;
+                    var record = DNSParser.ParseResponse(pack);
+
+                    lock (cash)
+                    {
+                        cash[record.Item1] = record.Item2;
+                    }
+                }
+                catch (MailformRequestException ex)
+                {
+                    var id = pack[0] * 256 + pack[1];
+                    if (!backup.ContainsKey(id))
+                    {
+                        backup[id] = new Queue<byte[]>();
+                    }
+                    backup[id].Enqueue(pack);
                 }
             }
         }
@@ -45,13 +59,5 @@ namespace DNSServer
 
             client.Send(pack, pack.Length);
         }
-
-        //public Record[] ResolveName(Question question)
-        //{
-        //    var id = uidg.Generate();
-        //    var pack = DNSParser.GenerateRequest(question, id);
-        //    client.Send(pack, pack.Length);
-            
-        //}
     }
 }
